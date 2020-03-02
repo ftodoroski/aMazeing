@@ -1,4 +1,3 @@
-
 var cols, rows; //these variables are the columns and rows 
 var s = 25 // this is the s of a sell 
 var grid = []
@@ -6,11 +5,14 @@ var current;
 var stack = []
 
 
+
 function setup(){ // this function sets up the canvas 
-    createCanvas(350,350)
+    createCanvas(400,400)
     cols = floor(width/s)
     rows = floor(height/s)
-    frameRate(5000)
+    // frameRate(1000)
+
+    
 
     for (var j = 0; j < rows; j++){
         for(var i = 0; i < cols; i++){
