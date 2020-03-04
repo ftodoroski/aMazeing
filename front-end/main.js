@@ -5,12 +5,19 @@ var grid = []
 var current;
 var stack = []
 var next;
+var img;
+
+// function preload(){
+    // img= loadImage('front-end/assets/download.jpg')
+// }
+
+// loadImage('front-end/assets/download.jpg', img => {})
 
 
 
 
 function setup(){ // this function sets up the canvas 
-    createCanvas(400,400)
+    createCanvas(500,500)
     cols = floor(width/s)
     rows = floor(height/s)
     frameRate(100000)
@@ -34,8 +41,12 @@ function draw(){
     for (var i = 0; i < grid.length; i++){
         grid[i].show()
     }
+    
+    let endpoint = grid[index(19,19)]
+
     current.visited = true
     current.highlight()
+    endpoint.highlight()
 
     next = current.checkNeighbors(current.i, current.j)
     if(next){
@@ -60,6 +71,8 @@ function index(i,j){ // needed to make the program think of the array as one dim
     }
     return i + j * cols 
 } // ends index function
+
+var currentColor =  Math.floor(Math.random() * 255)
 
 function Cell(i,j){ // this is a constructor function for a cell object 
     this.i = i
@@ -110,14 +123,15 @@ function Cell(i,j){ // this is a constructor function for a cell object
         var x = this.i*s;
         var y = this.j*s;
         noStroke()
-        fill(100,100.0,0)
+        fill(currentColor,0,0)
         rect(x,y,s,s)
     }
+
 
     this.show = function(){
         var x = this.i*s;
         var y = this.j*s;
-        stroke(100);
+        stroke(0, 0,0);
         
         
         if (this.walls[0]){
@@ -133,14 +147,18 @@ function Cell(i,j){ // this is a constructor function for a cell object
         line(x,y+s,x,y)}
 
         // These 4 lines are creating lines within our grid. 
-        
+
+    
         if(this.visited){
         noStroke()
-        fill(400, 100, 255, 100); //simple color coordinates
+        fill(color1,color2,color3); //simple color coordinates
         rect(x,y,s,s);
         }
     } // ends show function
 } // ends Cells function    
+var color1 = Math.floor(Math.random()*180)
+var color2 = Math.floor(Math.random() * (255 - 100) ) + 100
+var color3 = Math.floor(Math.random()*255)
 
 function removeWalls(a,b){
     // console.log("this is A", a)
@@ -167,25 +185,34 @@ function removeWalls(a,b){
 document.addEventListener("keydown", function(e){
      
     if(e.keyCode === 39){ // right 
+        e.preventDefault()
         var rightNeighbor = grid[index(current.i+1,current.j)]
         if(rightNeighbor.walls[3]==false){
     current.i += 1}
+    endOfGame(current)
     } else if(e.keyCode === 37){
+        e.preventDefault()
+        if(current.i < 0){
+            current.i +=1}       
         var leftNeighbor = grid[index(current.i-1,current.j)];
         if(leftNeighbor.walls[1]==false)
-    current.i -= 1
+        current.i -= 1
+    endOfGame(current)
     }else if(e.keyCode === 38){
+        e.preventDefault()
         var bottomNeighbor = grid[index(current.i,current.j-1)];
         if(bottomNeighbor.walls[2]==false)
     current.j -= 1
+    endOfGame(current)
    
     }else if(e.keyCode === 40){
+        e.preventDefault()
         var bottomNeighbor = grid[index(current.i,current.j+1)];
         if(bottomNeighbor.walls[0]==false)
     current.j += 1
- 
-
+    endOfGame(current)
     }
+
 
     // if(e.keyCode === 39) {  
     //     console.log(current.walls)
@@ -194,11 +221,22 @@ document.addEventListener("keydown", function(e){
 })
 
 
+// function stopGoingOut(current){
+//     if(current.i < 0 || current.j < 0 || current.i > cols -1 || curent.j > rows - 1){
+//     return -1
+// }}
+
 function endOfGame(current){
-    if(current.i === 15 && current.j === 15){
-    // fetch()
+    if(current.i === 19 && current.j === 19){
+    current.i = 0;
+    current.j = 0;
+    location.reload()}
     }
-}
+
+
+
+
+
 
 
 
