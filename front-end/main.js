@@ -1,18 +1,11 @@
 
 var cols, rows; //these variables are the columns and rows 
-var s = 25 // this is the s of a sell 
+var s = 25 // this is the size of a cell 
 var grid = []
 var current;
 var stack = []
 var next;
 var img;
-
-// function preload(){
-    // img= loadImage('front-end/assets/download.jpg')
-// }
-
-// loadImage('front-end/assets/download.jpg', img => {})
-
 
 
 
@@ -20,7 +13,7 @@ function setup(){ // this function sets up the canvas
     createCanvas(500,500)
     cols = floor(width/s)
     rows = floor(height/s)
-    frameRate(100000)
+    frameRate()
 
     
 
@@ -51,7 +44,9 @@ function draw(){
     next = current.checkNeighbors(current.i, current.j)
     if(next){
         next.visited = true
-        
+
+        changeGameLoaded()
+
         stack.push(current)
 
         removeWalls(current,next)
@@ -61,7 +56,7 @@ function draw(){
     } else if(stack.length > 0){
         current = stack.pop()
     }
-
+    // changeGameLoaded(grid)
 } // ends draw function
 
 
@@ -181,16 +176,34 @@ function removeWalls(a,b){
         a.walls[2] = false
         b.walls[0] = false  
     }
+    
 }// ends removewalls
+
+//Create Start Button
+
+var button = document.createElement("button")
+button.innerHTML = "Start Timer"
+var time = document.getElementById("timer")
+time.append(button)
+
+
+button.addEventListener("click",function(event){
+    timerStarted = true
+    setTimer()
+    button.remove()
+})
+
+
 document.addEventListener("keydown", function(e){
-     
-    if(e.keyCode === 39){ // right 
+
+
+    if(e.keyCode === 39 && truthArray.length === 399 && timerStarted === true){ // right 
         e.preventDefault()
         var rightNeighbor = grid[index(current.i+1,current.j)]
         if(rightNeighbor.walls[3]==false){
     current.i += 1}
     endOfGame(current)
-    } else if(e.keyCode === 37){
+    } else if(e.keyCode === 37 && truthArray.length === 399 && timerStarted === true){
         e.preventDefault()
         if(current.i < 0){
             current.i +=1}       
@@ -198,40 +211,61 @@ document.addEventListener("keydown", function(e){
         if(leftNeighbor.walls[1]==false)
         current.i -= 1
     endOfGame(current)
-    }else if(e.keyCode === 38){
+    }else if(e.keyCode === 38 && truthArray.length === 399 && timerStarted === true){
         e.preventDefault()
         var bottomNeighbor = grid[index(current.i,current.j-1)];
         if(bottomNeighbor.walls[2]==false)
     current.j -= 1
     endOfGame(current)
    
-    }else if(e.keyCode === 40){
+    }else if(e.keyCode === 40 && truthArray.length === 399 && timerStarted === true){
         e.preventDefault()
         var bottomNeighbor = grid[index(current.i,current.j+1)];
         if(bottomNeighbor.walls[0]==false)
     current.j += 1
     endOfGame(current)
     }
-
-
-    // if(e.keyCode === 39) {  
-    //     console.log(current.walls)
-    //     current.i += 1
-    // }
 })
-
-
-// function stopGoingOut(current){
-//     if(current.i < 0 || current.j < 0 || current.i > cols -1 || curent.j > rows - 1){
-//     return -1
-// }}
 
 function endOfGame(current){
     if(current.i === 19 && current.j === 19){
     current.i = 0;
     current.j = 0;
+    gameLoaded = false
     location.reload()}
+}
+
+
+let truthArray = []
+
+function changeGameLoaded(){
+        truthArray.push(next.visited) 
     }
+
+
+
+var counter = 0
+var timeleft = 35
+var timerStarted = false 
+
+function setTimer(){
+if(timerStarted === true){
+    var timer = select('#timer');
+
+    function timeIt(){
+        counter ++ 
+        timer.html(timeleft - counter)
+        if(counter === timeleft){
+            location.reload()
+        }
+    }
+
+    setInterval(timeIt, 1000)}// this says that we want the event 'timeIt' to happen every 1000 milliseconds
+}
+
+
+
+
 
 
 
